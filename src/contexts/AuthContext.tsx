@@ -3,85 +3,66 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, UserRole, AuthContextType } from '../types/auth';
 import { toast } from '@/components/ui/use-toast';
-
-// Sample users for demonstration
-const DEMO_USERS: User[] = [
-  {
-    id: '1',
-    email: 'student@example.com',
-    name: 'John Student',
-    role: 'student',
-    avatar: 'https://i.pravatar.cc/150?img=1',
-  },
-  {
-    id: '2',
-    email: 'teacher@example.com',
-    name: 'Emma Teacher',
-    role: 'teacher',
-    avatar: 'https://i.pravatar.cc/150?img=2',
-  },
-  {
-    id: '3',
-    email: 'admin@example.com',
-    name: 'Admin User',
-    role: 'admin',
-    avatar: 'https://i.pravatar.cc/150?img=3',
-  },
-];
+import { api } from '../services/api';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [token, setToken] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check for saved user in localStorage
-    const savedUser = localStorage.getItem('eduTrackscapeUser');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+    // Check for saved token in localStorage
+    const savedToken = localStorage.getItem('eduTrackscapeToken');
+    if (savedToken) {
+      setToken(savedToken);
+      loadUserProfile(savedToken);
+    } else {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, []);
+
+  const loadUserProfile = async (authToken: string) => {
+    try {
+      const userData = await api.getUserProfile(authToken);
+      setUser(userData);
+    } catch (error) {
+      console.error('Failed to load user profile:', error);
+      // Token might be expired or invalid
+      logout();
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const { user: userData, token: authToken } = await api.login(email, password);
       
-      // Find user (in a real app, this would be a backend call)
-      const foundUser = DEMO_USERS.find(u => u.email === email);
+      setUser(userData);
+      setToken(authToken);
+      localStorage.setItem('eduTrackscapeToken', authToken);
       
-      if (foundUser && password === 'password') { // Simplistic check for demo
-        setUser(foundUser);
-        localStorage.setItem('eduTrackscapeUser', JSON.stringify(foundUser));
-        
-        toast({
-          title: "Login successful",
-          description: `Welcome back, ${foundUser.name}!`,
-        });
-        
-        // Redirect based on role
-        if (foundUser.role === 'student') {
-          navigate('/dashboard');
-        } else if (foundUser.role === 'teacher') {
-          navigate('/teacher');
-        } else {
-          navigate('/admin');
-        }
+      toast({
+        title: "Login successful",
+        description: `Welcome back, ${userData.name}!`,
+      });
+      
+      // Redirect based on role
+      if (userData.role === 'student') {
+        navigate('/dashboard');
+      } else if (userData.role === 'teacher') {
+        navigate('/teacher');
       } else {
-        toast({
-          title: "Login failed",
-          description: "Invalid email or password",
-          variant: "destructive",
-        });
+        navigate('/admin');
       }
     } catch (error) {
       toast({
-        title: "Login error",
-        description: "An unexpected error occurred",
+        title: "Login failed",
+        description: error instanceof Error ? error.message : "Invalid email or password",
         variant: "destructive",
       });
       console.error('Login error:', error);
@@ -93,33 +74,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signup = async (name: string, email: string, password: string, role: UserRole) => {
     setIsLoading(true);
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const { user: userData, token: authToken } = await api.signup(name, email, password, role);
       
-      // Check if email already exists
-      if (DEMO_USERS.some(u => u.email === email)) {
-        toast({
-          title: "Signup failed",
-          description: "Email already in use",
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      // Create new user (in a real app, this would be a backend call)
-      const newUser: User = {
-        id: `${DEMO_USERS.length + 1}`,
-        email,
-        name,
-        role,
-        avatar: `https://i.pravatar.cc/150?img=${DEMO_USERS.length + 4}`,
-      };
-      
-      // In a real app, DEMO_USERS would be updated in a database
-      // For this demo, we'll just simulate success
-      
-      setUser(newUser);
-      localStorage.setItem('eduTrackscapeUser', JSON.stringify(newUser));
+      setUser(userData);
+      setToken(authToken);
+      localStorage.setItem('eduTrackscapeToken', authToken);
       
       toast({
         title: "Account created",
@@ -137,7 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       toast({
         title: "Signup error",
-        description: "An unexpected error occurred",
+        description: error instanceof Error ? error.message : "An unexpected error occurred",
         variant: "destructive",
       });
       console.error('Signup error:', error);
@@ -148,7 +107,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('eduTrackscapeUser');
+    setToken(null);
+    localStorage.removeItem('eduTrackscapeToken');
     toast({
       title: "Logged out",
       description: "You have been logged out successfully",

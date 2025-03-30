@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -37,6 +38,13 @@ const LoginPage = () => {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
+            <Alert className="bg-yellow-50 text-yellow-800 border-yellow-200">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                This application is now connected to a real backend server. Please use your registered credentials.
+              </AlertDescription>
+            </Alert>
+            
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -62,14 +70,6 @@ const LoginPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-            </div>
-            <div className="text-sm text-gray-500">
-              For demo, use:
-              <ul className="list-disc pl-5 space-y-1 mt-1">
-                <li>student@example.com / password</li>
-                <li>teacher@example.com / password</li>
-                <li>admin@example.com / password</li>
-              </ul>
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
