@@ -3,7 +3,7 @@ import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { AreaChart, BarChart, LineChart, PieChart } from '@/components/ui/chart';
+import { AreaChart, BarChart, LineChart, PieChart } from '@/components/ui/recharts';
 import { Badge } from '@/components/ui/badge';
 import { CalendarDays, Clock, FileText, TrendingUp, Trophy, CheckCircle2, BookOpen, BrainCircuit } from 'lucide-react';
 

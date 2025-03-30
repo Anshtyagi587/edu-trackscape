@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { toast } from '@/components/ui/use-toast';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Separator } from '@/components/ui/separator';
 import { BookOpen, CheckCircle, Timer, AlertCircle, Award, FileQuestion } from 'lucide-react';
 
 // Mock quiz data
@@ -378,7 +377,6 @@ const QuizPage = () => {
           <Progress 
             value={(currentQuestion + 1) / quizData.questions.length * 100} 
             className="h-2" 
-            indicatorClassName="bg-edu-blue" 
           />
         </CardHeader>
         <CardContent className="space-y-6">
@@ -448,7 +446,6 @@ const QuizPage = () => {
             <Progress 
               value={countAnsweredQuestions() / quizData.questions.length * 100} 
               className="h-2" 
-              indicatorClassName="bg-edu-green" 
             />
             
             <div className="mt-4 flex flex-wrap gap-2">
