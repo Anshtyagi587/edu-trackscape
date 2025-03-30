@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -7,7 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { UserRole } from '@/types/auth';
 
 const SignupPage = () => {
@@ -17,10 +17,13 @@ const SignupPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState<UserRole>('student');
   const [passwordError, setPasswordError] = useState('');
+  const [signupError, setSignupError] = useState('');
   const { signup, isAuthenticated, isLoading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    setSignupError('');
     
     if (password !== confirmPassword) {
       setPasswordError("Passwords don't match");
@@ -28,7 +31,13 @@ const SignupPage = () => {
     }
     
     setPasswordError('');
-    await signup(name, email, password, role);
+    
+    try {
+      await signup(name, email, password, role);
+    } catch (error) {
+      console.error('Signup error:', error);
+      setSignupError(error instanceof Error ? error.message : 'Failed to create account. Please try again.');
+    }
   };
 
   // If user is already authenticated, redirect to dashboard
@@ -50,6 +59,13 @@ const SignupPage = () => {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
+            {signupError && (
+              <Alert className="bg-red-50 text-red-800 border-red-200">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{signupError}</AlertDescription>
+              </Alert>
+            )}
+            
             <div className="space-y-2">
               <Label htmlFor="name">Full Name</Label>
               <Input

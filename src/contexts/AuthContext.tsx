@@ -66,6 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         variant: "destructive",
       });
       console.error('Login error:', error);
+      throw error; // Re-throw to allow handling in the login component
     } finally {
       setIsLoading(false);
     }
@@ -100,6 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         variant: "destructive",
       });
       console.error('Signup error:', error);
+      throw error; // Re-throw to allow handling in the signup component
     } finally {
       setIsLoading(false);
     }

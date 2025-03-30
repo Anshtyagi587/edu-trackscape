@@ -1,7 +1,13 @@
 
 import { User, UserRole } from '../types/auth';
+import { createClient } from '@supabase/supabase-js';
 
-const API_URL = 'https://api.example.com'; // Replace with your actual API URL
+// Replace these with your actual Supabase credentials
+const SUPABASE_URL = 'https://your-supabase-url.supabase.co';
+const SUPABASE_ANON_KEY = 'your-supabase-anon-key';
+
+// Initialize the Supabase client
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 interface LoginResponse {
   user: User;
@@ -16,20 +22,32 @@ interface SignupResponse {
 export const api = {
   login: async (email: string, password: string): Promise<LoginResponse> => {
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
       
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Login failed');
+      if (error) {
+        throw new Error(error.message || 'Login failed');
       }
       
-      return await response.json();
+      if (!data.user) {
+        throw new Error('User data not found');
+      }
+      
+      // Map Supabase user to our User type
+      const userData: User = {
+        id: data.user.id,
+        email: data.user.email || '',
+        name: data.user.user_metadata.name || data.user.email?.split('@')[0] || 'User',
+        role: (data.user.user_metadata.role as UserRole) || 'student',
+        avatar: data.user.user_metadata.avatar_url,
+      };
+      
+      return {
+        user: userData,
+        token: data.session.access_token,
+      };
     } catch (error) {
       throw error;
     }
@@ -37,20 +55,38 @@ export const api = {
   
   signup: async (name: string, email: string, password: string, role: UserRole): Promise<SignupResponse> => {
     try {
-      const response = await fetch(`${API_URL}/auth/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            name,
+            role,
+          },
         },
-        body: JSON.stringify({ name, email, password, role }),
       });
       
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Signup failed');
+      if (error) {
+        throw new Error(error.message || 'Signup failed');
       }
       
-      return await response.json();
+      if (!data.user) {
+        throw new Error('User data not found');
+      }
+      
+      // Map Supabase user to our User type
+      const userData: User = {
+        id: data.user.id,
+        email: data.user.email || '',
+        name: data.user.user_metadata.name || name,
+        role: role,
+        avatar: data.user.user_metadata.avatar_url,
+      };
+      
+      return {
+        user: userData,
+        token: data.session?.access_token || '',
+      };
     } catch (error) {
       throw error;
     }
@@ -58,18 +94,26 @@ export const api = {
   
   getUserProfile: async (token: string): Promise<User> => {
     try {
-      const response = await fetch(`${API_URL}/user/profile`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      const { data: { user }, error } = await supabase.auth.getUser(token);
       
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to get user profile');
+      if (error) {
+        throw new Error(error.message || 'Failed to get user profile');
       }
       
-      return await response.json();
+      if (!user) {
+        throw new Error('User data not found');
+      }
+      
+      // Map Supabase user to our User type
+      const userData: User = {
+        id: user.id,
+        email: user.email || '',
+        name: user.user_metadata.name || user.email?.split('@')[0] || 'User',
+        role: (user.user_metadata.role as UserRole) || 'student',
+        avatar: user.user_metadata.avatar_url,
+      };
+      
+      return userData;
     } catch (error) {
       throw error;
     }
