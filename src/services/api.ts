@@ -1,13 +1,6 @@
 
 import { User, UserRole } from '../types/auth';
-import { createClient } from '@supabase/supabase-js';
-
-// Replace these with your actual Supabase credentials
-const SUPABASE_URL = 'https://your-supabase-url.supabase.co';
-const SUPABASE_ANON_KEY = 'your-supabase-anon-key';
-
-// Initialize the Supabase client
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+import { supabase } from '@/integrations/supabase/client';
 
 interface LoginResponse {
   user: User;
