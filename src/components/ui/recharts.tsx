@@ -58,7 +58,7 @@ export function BarChart({ data, options, className }: ChartProps) {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />
         <YAxis />
-        <Tooltip content={(props) => <ChartTooltipContent {...props} />} />
+        <Tooltip content={<ChartTooltipContent />} />
         <Legend />
         {data.datasets?.map((dataset: any, index: number) => (
           <Bar 
@@ -105,7 +105,7 @@ export function LineChart({ data, options, className }: ChartProps) {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />
         <YAxis />
-        <Tooltip content={(props) => <ChartTooltipContent {...props} />} />
+        <Tooltip content={<ChartTooltipContent />} />
         <Legend />
         {data.datasets?.map((dataset: any, index: number) => (
           <Line 
@@ -155,7 +155,7 @@ export function AreaChart({ data, options, className }: ChartProps) {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />
         <YAxis />
-        <Tooltip content={(props) => <ChartTooltipContent {...props} />} />
+        <Tooltip content={<ChartTooltipContent />} />
         <Legend />
         {data.datasets?.map((dataset: any, index: number) => (
           <Area 
@@ -198,7 +198,7 @@ export function PieChart({ data, options, className }: ChartProps) {
   return (
     <ChartContainer config={config} className={className}>
       <RechartsPieChart {...options}>
-        <Tooltip content={(props) => <ChartTooltipContent {...props} />} />
+        <Tooltip content={<ChartTooltipContent />} />
         <Legend />
         <Pie
           data={chartData}

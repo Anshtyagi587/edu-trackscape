@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { BookOpen, CheckCircle, Timer, AlertCircle, Award, FileQuestion } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 // Mock quiz data
 const quizData = {
@@ -83,6 +85,7 @@ const QuizPage = () => {
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(quizData.timeLimit * 60); // converting to seconds
   const [quizStarted, setQuizStarted] = useState(false);
+  const { toast } = useToast();
   
   // Start timer when quiz starts
   React.useEffect(() => {
