@@ -11,7 +11,7 @@ const Footer = () => {
           <div className="md:col-span-1">
             <div className="flex items-center">
               <BookOpen className="h-8 w-8 text-edu-blue" />
-              <span className="ml-2 text-xl font-bold text-gray-900">EduTrackScape</span>
+              <span className="ml-2 text-xl font-bold text-gray-900">Eduflow</span>
             </div>
             <p className="mt-3 text-gray-600 text-sm">
               Empowering students with comprehensive learning tracking and performance analytics.
