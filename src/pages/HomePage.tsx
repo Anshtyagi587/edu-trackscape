@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { 
@@ -14,6 +13,24 @@ import {
 } from 'lucide-react';
 
 const HomePage = () => {
+  useEffect(() => {
+    // Inject Botpress Webchat Scripts
+    const script1 = document.createElement("script");
+    script1.src = "https://cdn.botpress.cloud/webchat/v2.2/inject.js";
+    script1.async = true;
+    document.body.appendChild(script1);
+
+    const script2 = document.createElement("script");
+    script2.src = "https://files.bpcontent.cloud/2025/03/30/15/20250330150921-9386B68T.js";
+    script2.async = true;
+    document.body.appendChild(script2);
+
+    return () => {
+      document.body.removeChild(script1);
+      document.body.removeChild(script2);
+    };
+  }, []);
+
   return (
     <div className="animate-fade-in">
       {/* Hero Section */}
@@ -40,27 +57,8 @@ const HomePage = () => {
                   </Button>
                 </Link>
               </div>
-              
-              <div className="mt-12 grid grid-cols-2 gap-x-6 gap-y-4 sm:gap-8">
-                <div className="flex items-center">
-                  <CheckCircle className="h-6 w-6 text-edu-green mr-2" />
-                  <span className="text-gray-700">Performance Tracking</span>
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="h-6 w-6 text-edu-green mr-2" />
-                  <span className="text-gray-700">Interactive Quizzes</span>
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="h-6 w-6 text-edu-green mr-2" />
-                  <span className="text-gray-700">Video Lessons</span>
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="h-6 w-6 text-edu-green mr-2" />
-                  <span className="text-gray-700">Progress Reports</span>
-                </div>
-              </div>
             </div>
-            
+
             <div className="lg:relative">
               <div className="mx-auto max-w-md lg:max-w-none">
                 <div className="relative h-[420px] sm:h-[500px] lg:h-auto overflow-hidden rounded-2xl shadow-xl bg-white">
@@ -90,7 +88,7 @@ const HomePage = () => {
               Everything you need to excel in your educational journey
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-xl shadow hover:shadow-md transition-shadow edu-card">
               <div className="h-12 w-12 rounded-lg bg-edu-blue/10 flex items-center justify-center mb-4">
@@ -111,50 +109,10 @@ const HomePage = () => {
                 Assess your knowledge with our comprehensive quiz system with instant feedback.
               </p>
             </div>
-            
-            <div className="bg-white p-6 rounded-xl shadow hover:shadow-md transition-shadow edu-card">
-              <div className="h-12 w-12 rounded-lg bg-edu-yellow/10 flex items-center justify-center mb-4">
-                <Video className="h-6 w-6 text-edu-yellow" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Video Learning</h3>
-              <p className="text-gray-600">
-                Access a library of educational videos organized by subject and topic.
-              </p>
-            </div>
-            
-            <div className="bg-white p-6 rounded-xl shadow hover:shadow-md transition-shadow edu-card">
-              <div className="h-12 w-12 rounded-lg bg-edu-blue/10 flex items-center justify-center mb-4">
-                <MessageSquare className="h-6 w-6 text-edu-blue" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Discussion Forum</h3>
-              <p className="text-gray-600">
-                Engage with peers and instructors in topic-specific discussion boards.
-              </p>
-            </div>
-            
-            <div className="bg-white p-6 rounded-xl shadow hover:shadow-md transition-shadow edu-card">
-              <div className="h-12 w-12 rounded-lg bg-edu-green/10 flex items-center justify-center mb-4">
-                <GraduationCap className="h-6 w-6 text-edu-green" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Performance Reports</h3>
-              <p className="text-gray-600">
-                Receive detailed reports highlighting strengths and areas for improvement.
-              </p>
-            </div>
-            
-            <div className="bg-white p-6 rounded-xl shadow hover:shadow-md transition-shadow edu-card">
-              <div className="h-12 w-12 rounded-lg bg-edu-red/10 flex items-center justify-center mb-4">
-                <BrainCircuit className="h-6 w-6 text-edu-red" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Smart Recommendations</h3>
-              <p className="text-gray-600">
-                Get personalized content recommendations based on your performance and interests.
-              </p>
-            </div>
           </div>
         </div>
       </section>
-      
+
       {/* CTA */}
       <section className="py-16 bg-edu-blue text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
