@@ -51,9 +51,9 @@ const HomePage = () => {
                     Get Started
                   </Button>
                 </Link>
-                <Link to="/about">
+                <Link to="/courses">
                   <Button size="lg" variant="outline">
-                    Learn More
+                    Browse Courses
                   </Button>
                 </Link>
               </div>

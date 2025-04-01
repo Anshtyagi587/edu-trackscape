@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -31,9 +30,6 @@ const Navbar: React.FC = () => {
               </Link>
               <Link to="/videos" className="text-gray-700 hover:text-edu-blue px-3 py-2 text-sm font-medium">
                 Videos
-              </Link>
-              <Link to="/about" className="text-gray-700 hover:text-edu-blue px-3 py-2 text-sm font-medium">
-                About
               </Link>
             </nav>
           </div>
@@ -113,13 +109,6 @@ const Navbar: React.FC = () => {
             onClick={() => setIsMenuOpen(false)}
           >
             Videos
-          </Link>
-          <Link 
-            to="/about" 
-            className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-edu-blue"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            About
           </Link>
           
           {isAuthenticated ? (

@@ -17,7 +17,6 @@ import QuizPage from "./pages/QuizPage";
 import CoursesPage from "./pages/CoursesPage";
 import QuizzesListPage from "./pages/QuizzesListPage";
 import VideosPage from "./pages/VideosPage";
-import AboutPage from "./pages/AboutPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,7 +37,6 @@ const App = () => (
               <Route path="/courses" element={<CoursesPage />} />
               <Route path="/quizzes" element={<QuizzesListPage />} />
               <Route path="/videos" element={<VideosPage />} />
-              <Route path="/about" element={<AboutPage />} />
             </Route>
             
             {/* Dashboard Routes with Dashboard Layout */}
