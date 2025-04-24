@@ -1,4 +1,3 @@
-
 import { User, UserRole } from '../types/auth';
 import { supabase } from '@/integrations/supabase/client';
 

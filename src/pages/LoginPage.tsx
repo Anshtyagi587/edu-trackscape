@@ -12,11 +12,19 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const { login, isAuthenticated, isLoading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(email, password);
+    setError('');
+    
+    try {
+      await login(email, password);
+    } catch (err) {
+      console.error('Login form error:', err);
+      setError(err instanceof Error ? err.message : 'Failed to login. Please check your credentials.');
+    }
   };
 
   // If user is already authenticated, redirect to dashboard
@@ -38,12 +46,12 @@ const LoginPage = () => {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
-            <Alert className="bg-yellow-50 text-yellow-800 border-yellow-200">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                This application is now connected to a real backend server. Please use your registered credentials.
-              </AlertDescription>
-            </Alert>
+            {error && (
+              <Alert className="bg-red-50 text-red-800 border-red-200">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
             
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
